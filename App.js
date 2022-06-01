@@ -46,15 +46,8 @@ const universal = Linking.createURL('https://app.example.com');
  const MyStack =()=>{
   return (
      
- <Stack.Navigator>
- <Stack.Screen
-  name="Welcome"
-  component={Welcome}
-  options={{headerShown:false}}/>
-  
-  <Stack.Screen
-  name="TopTabs"
-  component={TopTabs}/>
+  <Stack.Navigator>
+
   
   <Stack.Screen
   name="BottomTabs"
@@ -73,7 +66,7 @@ const  config = {
      Welcome:"welcome",
      TopTabs:"toptabs",
      BottomTabs:"bottomtabs",
-      Hello:"hello",
+     
       
 }
   }

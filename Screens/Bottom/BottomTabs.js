@@ -9,6 +9,8 @@ import Feather from "react-native-vector-icons/Feather"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
+
 
 import Home from "./Home.js"
 import Market from "./Market.js"
@@ -25,7 +27,7 @@ export default function BottomTabs({user}) {
   <Tab.Navigator
   shifting={false}
   activeColor="#0013ff"
-  inactiveColor="##a3abad"
+  inactiveColor="#a3abad"
 barStyle={{ backgroundColor: '#ffffff' }}
    >
   
@@ -47,7 +49,7 @@ barStyle={{ backgroundColor: '#ffffff' }}
   options={{
           tabBarLabel: 'Market',
           tabBarIcon: ({ color }) => (
-          <MaterialCommunityIcons name="store" color={color} size={26} />
+          <FontAwesome5 name="coins" size={24} color={color} />
           ),
         }}
   
