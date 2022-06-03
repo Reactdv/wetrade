@@ -11,6 +11,7 @@ import Feather from "react-native-vector-icons/Feather"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import Ionicons from "react-native-vector-icons/Ionicons"
 
+import Carousel from 'react-native-reanimated-carousel'
 
 import tw from "twrnc"
 
@@ -22,7 +23,36 @@ Ionicons.loadFont();
 
 const Url_D =  "http://localhost:19006/bottomtabs/Home/WetradeCup"
 
-
+const data = [
+ 
+ {
+   img:require("./../../../assets/images/championship-cup.png"),
+   nav: ()=> navigation.navigate("WetradeCup"),
+   txt: "Wetrade Cup",
+   txt2: "May 9 - July 30",
+   
+ }, 
+  
+ {
+   img:require("./../../../assets/images/envelope.png"),
+   nav: ()=> navigation.navigate("WetradeCup"),
+   txt: "Wetrade Cup",
+   txt2: "May 9 - July 30",
+   
+ }, 
+  
+ {
+   
+   nav: ()=> navigation.navigate("FAQ"),
+   txt: "Newbie must read",
+   txt2: "May 9 - July 30",
+   icon: "newspaper-outline",
+   
+   
+ }, 
+  
+  
+  ]
 
 export default function Home
 ({navigation}) {

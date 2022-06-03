@@ -1,12 +1,12 @@
 
 import React from "react"
 import styled from "styled-components/native"
-import {useState,useLayoutEffect} from "react"
+import {useMemo,useState,useEffect,useLayoutEffect} from "react"
 import { StatusBar } from 'expo-status-bar';
 import {Image, ScrollView,FlatList,SafeAreaView,TouchableOpacity,TextInput,StyleSheet, Text, View } from 'react-native';
 
 import tw from "twrnc"
-
+import axios from "axios"
 import Feather from "react-native-vector-icons/Feather"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import Ionicons from "react-native-vector-icons/Ionicons"
@@ -90,24 +90,82 @@ const topMovers = [
   
   
   ]
+  
+  
+const Crypto =({Id,mc,Img,Name,symbol,Price,priceChange})=>{
+  return (
+    
+<TouchableOpacity  
+style={tw`flex flex-row items-center justify-between my-2.5`}
+key={Id}>
+   <View style={tw`flex flex-row items-center justify-start p-1.5`}>
+   <Image 
+   style={{width:50, height:50,borderRadius:25}}
+   resizeMode="contain"
+   source={Img}/>
+  <Text style={tw`text-lg ml-1.5`}>{Name}</Text> 
+  </View>
+        <View style={{gap:5}}>      
+        <Text>₱ {Price.toLocaleString()}</Text>
+        <Text>₱{mc.toLocaleString()}</Text>
+        <Text 
+        style={{color:priceChange < 0?"red":"green"}}>
+        {priceChange}%</Text> 
+        </View>
+    
+</TouchableOpacity>
+    
+    )
+}
+  
 
 export default function Market
 ({navigation}) {
+  const [coins,setCoins] = useState([])
+  const [trend,setTrend] = useState([])
+  const [isloading,setLoading] = useState(false)
+ 
+ 
+
+ 
+  useLayoutEffect(()=>{
+    axios.get ("https://api.coingecko.com/api/v3/coins/markets?vs_currency=php&order=market_cap_desc&per_page=30&page=1&sparkline=false ")
+      .then((res) => {
+        return (setCoins(res.data)
+        
+              
+        )})
+      .catch(error => alert(error))
+      
+  },[])
   
-  
+ useLayoutEffect(()=>{
+   axios.get("https://api.coingecko.com/api/v3/search/trending")
+   .then((res) => {
+     return (
+       setLoading(true),
+     setTrend(res.coins)
+    
+     )})
+   .catch(err => alert(err))
+   .finally(()=> setLoading(false))
+ },[])
   return (
     
 <View style={container}>
   <View>
-     <Text style={tw`text-lg font-extrabold`}> Top mover </Text>
+     <View><Text style={tw`text-lg font-extrabold`}> Top mover </Text>
+     </View>
      <ScrollView 
      showsHorizontalScrollIndicator={false}
      horizontal={true}style={[tw`flex flex-row flex-auto pt-2.5 h-auto`,{gap:10}]}>
      
         {
-          topMovers.map(({id,name,img,price,percent})=>{
-            return (
-              
+          
+        topMovers.map(({id,name,price,percent,img})=>{
+           
+           return (
+          
   <View key={id} style={[tw`rounded-md w-26 h-26 p-2.5 `,{marginRight:10,gap:5,borderWidth:1,borderColor:"#bac6c97c"}]}>
             <View style={tw`flex flex-row items-center justify-start`}>
            <Image style={{marginRight:5,width:20, height:20,borderRadius:10}}resizeMode="cover"source={img}/>
@@ -115,7 +173,8 @@ export default function Market
            <Text>{price}</Text>
            <Text style={tw`text-md font-semibold text-green-500`}>
            {percent}</Text>
-        </View>
+        </View> 
+        
               
               )
           })
@@ -123,8 +182,37 @@ export default function Market
         }
        
      </ScrollView>
-     
+   <View> <Text style={tw`text-lg font-medium`}>Markets</Text>
+   </View>
   </View>  
+  <View style={tw` flex pb-10 h-[450px] w-full`}>
+  
+  <ScrollView 
+  showsHorizontalScrollIndicator={false}
+  style={tw`w-auto h-auto`}>
+   
+   {coins.map((coins)=>{
+     return(
+       
+       <Crypto 
+       Id={coins.id}
+       Name={coins.name}
+       Price={coins.current_price}
+       Img={coins.image}
+       symbol={coins.symbol}
+       mc={coins.market_cap}
+       priceChange={coins.price_change_percentage_24h}
+       />
+
+       )
+   })}
+   
+   </ScrollView>
+   
+</View>
+  
+  
+  
 </View>
     
   );
@@ -135,3 +223,6 @@ export default function Market
 
 
 const container = tw`flex  my-4 mx-2.5 `
+
+
+
