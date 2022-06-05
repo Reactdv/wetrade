@@ -3,13 +3,21 @@ import React from "react"
 import styled from "styled-components/native"
 import {useMemo,useState,useEffect,useLayoutEffect} from "react"
 import { StatusBar } from 'expo-status-bar';
-import {Image, ScrollView,FlatList,SafeAreaView,TouchableOpacity,TextInput,StyleSheet, Text, View } from 'react-native';
+import {Modal,Image, ScrollView,FlatList,SafeAreaView,TouchableOpacity,TextInput,StyleSheet, Text, View } from 'react-native';
 
 import tw from "twrnc"
 import axios from "axios"
 import Feather from "react-native-vector-icons/Feather"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
+
+import { Entypo } from '@expo/vector-icons';
 import Ionicons from "react-native-vector-icons/Ionicons"
+
+import * as Linking from "expo-linking"
+
+import { useLinkTo, useLinkProps } from '@react-navigation/native';
+
+import {CoinDetails} from "./MarketComponents/CoinDetails.js"
 
 
 
@@ -17,6 +25,7 @@ import Ionicons from "react-native-vector-icons/Ionicons"
 Feather.loadFont();
 MaterialCommunityIcons.loadFont();
 Ionicons.loadFont();
+
 
 
 
@@ -92,12 +101,38 @@ const topMovers = [
   ]
   
   
-const Crypto =({Id,mc,Img,Name,symbol,Price,priceChange})=>{
+  
+const Url_E ="http://localhost:19006/bottomtabs/Market/coindetails";
+  
+  
+const Crypto =({navigation,athChange,high,low,Id,mc,Img,Name,symbol,Price,priceChange})=>{
+  
+  const [isVisible, setIsVisible] = useState(false)
   return (
     
 <TouchableOpacity  
+onPress={()=> {
+  return (
+
+setIsVisible(true)
+    )
+}}
+
 style={tw`flex flex-row items-center justify-between my-2.5`}
 key={Id}>
+
+     <Modal visible={isVisible}>
+
+       <CoinDetails 
+       athChange={athChange}
+       priceChange={priceChange}
+       high={high}
+       low={low}
+       setIsVisible={setIsVisible}
+       Price={Price}
+       symbol={symbol}/>
+
+     </Modal>
    <View style={tw`flex flex-row items-center justify-start p-1.5`}>
    <Image 
    style={{width:50, height:50,borderRadius:25}}
@@ -110,7 +145,7 @@ key={Id}>
         <Text>₱{mc.toLocaleString()}</Text>
         <Text 
         style={{color:priceChange < 0?"red":"green"}}>
-        {priceChange}%</Text> 
+        {priceChange.toFixed(2)}%</Text> 
         </View>
     
 </TouchableOpacity>
@@ -195,6 +230,9 @@ export default function Market
      return(
        
        <Crypto 
+       athChange={coins.ath_change_percentage}
+       high={coins.high_24h}
+       low={coins.low_24h}
        Id={coins.id}
        Name={coins.name}
        Price={coins.current_price}

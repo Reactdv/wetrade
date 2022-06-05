@@ -22,7 +22,7 @@ import Me from "./Me.js"
 import tw from "twrnc"
 const Tab = createMaterialBottomTabNavigator();
 
-export default function BottomTabs({user}) {
+export default function BottomTabs({navigation,user}) {
   return (
   <Tab.Navigator
   shifting={false}
@@ -44,6 +44,7 @@ barStyle={{ backgroundColor: '#ffffff' }}
          />
   
   <Tab.Screen
+  navigation={navigation}
   name="Market"
   component={Market}
   options={{

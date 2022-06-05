@@ -12,7 +12,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
-
+import { Entypo } from '@expo/vector-icons';
 
 
 import tw from "twrnc"
@@ -25,7 +25,10 @@ import Me from "./Screens/Bottom/Me.js"
 
 
 import TopTabs from "./Screens/Top/TopTabs.js"
+
 import BottomTabs from "./Screens/Bottom/BottomTabs.js"
+
+import {CoinDetails} from "./Screens/Bottom/MarketComponents/CoinDetails.js"
 
 import Welcome from "./Screens/Welcome.js"
 import Hello from "./Screens/Hello.js"
@@ -43,16 +46,25 @@ const universal = Linking.createURL('https://app.example.com');
 
 
  
- const MyStack =()=>{
+ const MyStack =({navigation})=>{
   return (
      
   <Stack.Navigator>
 
   
   <Stack.Screen
+  navigation={navigation}
   name="BottomTabs"
   component={BottomTabs}
   options={{headerShown:false}}/>
+  
+   
+  <Stack.Screen
+  name="CoinDetails"
+  component={CoinDetails}
+  options={{headerShown:false}}/>
+
+  
    </Stack.Navigator>
    )
  }
@@ -65,7 +77,7 @@ const  config = {
     screens:{
      Welcome:"welcome",
      TopTabs:"toptabs",
-     BottomTabs:"bottomtabs",
+     BottomTabs: "bottomtabs",
      
       
 }
