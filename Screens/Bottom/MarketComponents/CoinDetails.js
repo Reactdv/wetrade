@@ -1,9 +1,9 @@
 
 import React from "react"
 import styled from "styled-components/native"
-import {useState,useLayoutEffect} from "react"
+import {useState,useEffect,useLayoutEffect} from "react"
 import { StatusBar } from 'expo-status-bar';
-import { ScrollView,FlatList,SafeAreaView,TouchableOpacity,TextInput,StyleSheet, Text, View } from 'react-native';
+import { Dimensions,ScrollView,FlatList,SafeAreaView,TouchableOpacity,TextInput,StyleSheet, Text, View } from 'react-native';
 
 import * as Linking from "expo-linking"
 
@@ -12,28 +12,86 @@ import { AntDesign } from '@expo/vector-icons';
 import Feather from "react-native-vector-icons/Feather"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import Ionicons from "react-native-vector-icons/Ionicons"
+import axios from "axios"
 
-const Url_D = "http://localhost:19006/coininfo";
-
+import { Line } from "react-chartjs-2"
+import {Chart as ChartJS} from "chart.js/auto"
 
 Feather.loadFont();
 MaterialCommunityIcons.loadFont();
 Ionicons.loadFont();
 
 
-
-
 import tw from "twrnc"
 
 
-export const CoinDetails =
-({navigation,athChange,priceChange,low,high,Price,symbol,setIsVisible})=> {
+
+const LineChart =({mc,symbol,spark})=>{
+  let delayed;
   
+  return (
+    
+    <Line data={{
+      labels:[
+        "02:00",
+        "14:00",
+        "02:00",
+        "14:00",
+        "02:00",
+        "14:00",
+        "02:00",
+       
+        ],
+        datasets:[{
+          label: symbol.toUpperCase(),
+          data:spark.map((item)=> item),
+          fill: true,
+        }]
+      
+    }}
+     options={{
+       tension:0.3,
+       radius:2,
+       responsive:true,
+       pointBackgroundColor: "black",
+       backgroundColor:"#999999",
+       borderColor:"#rgb(29,31,29)",
+animation: {
+onComplete: () =>{
+delayed = true;
+},
+
+delay: (context) => {
+let delay = 0;
+if (context.type === "data" && context.mode === "default" && !delayed) {
+delay = context.dataIndex * 300+ context.datasetIndex * 100;
+}
+return delay;
+},
+},
+       scales:{
+         y:{
+           ticks:{
+             callback:(value)=>  "$" + value
+           }
+         }
+       }
+     }}/>
+    )
+}
+
+
+
+export const CoinDetails =
+({mc,spark,navigation,athChange,priceChange,low,high,Price,symbol,setIsVisible})=> {
+  
+ 
   
  
   
   return (
     
+   
     <View style={container}>
     
     <View style={tw`flex flex-row items-center Justify-center w-full`}>
@@ -69,10 +127,18 @@ onPress={()=> setIsVisible(false)}>
      </View>
      
      </View>
-     
+      <View style={tw` w-full flex flex-auto flex-col `}>
+   
+   
+     <LineChart 
+     mc={mc}
+     symbol={symbol}
+     spark={spark}/>  
+
+
+      </View>
      
     </View>
-    
   );
 }
 
